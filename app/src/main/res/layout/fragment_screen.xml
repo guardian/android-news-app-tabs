@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Screen" />
+
+    <Button
+        android:id="@+id/bGoToArticle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to article" />
+
+    <Button
+        android:id="@+id/bGoToList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to list" />
+
+    <Button
+        android:id="@+id/bGoToFront"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go to Front" />
+</LinearLayout>

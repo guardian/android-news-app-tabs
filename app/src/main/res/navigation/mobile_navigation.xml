@@ -12,14 +12,28 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.theguardian.navigation.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_discover"
+        android:name="com.theguardian.navigation.ui.discover.DiscoverFragment"
+        android:label="@string/title_discover"
+        tools:layout="@layout/fragment_live" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.theguardian.navigation.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_live"
+        android:name="com.theguardian.navigation.ui.live.LiveFragment"
+        android:label="@string/title_live"
+        tools:layout="@layout/fragment_live" />
+
+    <fragment
+        android:id="@+id/navigation_sfl"
+        android:name="com.theguardian.navigation.ui.sfl.SavedForLaterFragment"
+        android:label="@string/title_sfl"
+        tools:layout="@layout/fragment_sfl" />
+
+
+    <fragment
+        android:id="@+id/navigation_sections"
+        android:name="com.theguardian.navigation.ui.sections.SectionsFragment"
+        android:label="@string/title_sections"
+        tools:layout="@layout/fragment_sections" />
+
 </navigation>
