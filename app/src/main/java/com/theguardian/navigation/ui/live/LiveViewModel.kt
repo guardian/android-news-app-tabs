@@ -1,10 +1,10 @@
-package com.theguardian.navigation.ui.notifications
+package com.theguardian.navigation.ui.live
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class NotificationsViewModel : ViewModel() {
+class LiveViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is notifications Fragment"
