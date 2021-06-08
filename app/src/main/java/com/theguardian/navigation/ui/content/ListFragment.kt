@@ -15,7 +15,7 @@ class ListFragment : Fragment(R.layout.fragment_screen) {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        screenLauncher = parentFragment as ScreenLauncher
+        screenLauncher = context as ScreenLauncher
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

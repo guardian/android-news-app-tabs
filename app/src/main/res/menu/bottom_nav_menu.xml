@@ -10,19 +10,5 @@
         android:id="@+id/navigation_discover"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="@string/title_discover" />
-
-    <item
-        android:id="@+id/navigation_live"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_live" />
-    <item
-        android:id="@+id/navigation_sfl"
-        android:icon="@drawable/ic_baseline_bookmarks_24"
-        android:title="@string/title_sfl" />
-
-    <item
-        android:id="@+id/navigation_sections"
-        android:icon="@drawable/ic_baseline_new_releases_24"
-        android:title="@string/title_sections" />
-
+    
 </menu>

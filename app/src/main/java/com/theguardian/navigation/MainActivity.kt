@@ -1,49 +1,88 @@
 package com.theguardian.navigation
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.theguardian.navigation.ui.sections.SectionsFragment
+import com.theguardian.navigation.ui.content.ArticleFragment
+import com.theguardian.navigation.ui.content.FrontFragment
+import com.theguardian.navigation.ui.content.ListFragment
+import com.theguardian.navigation.ui.content.ScreenLauncher
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ScreenLauncher {
+
+    private var backstack: Backstack = Backstack.HOME
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main_without_navigation)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-
-        val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home,
-                R.id.navigation_discover,
-                R.id.navigation_live,
-                R.id.navigation_sfl,
-                R.id.navigation_sections
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        navView.setOnNavigationItemSelectedListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    changeBackstack(Backstack.HOME)
+                    true
+                }
+                R.id.navigation_discover -> {
+                    changeBackstack(Backstack.DISCOVER)
+                    true
+                }
+                else -> false
+            }
+        }
+        navView.selectedItemId = R.id.navigation_home
     }
 
-    override fun onBackPressed() {
 
-        val navHostFragment: NavHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val topFragment = navHostFragment.childFragmentManager.fragments[0]
+    private fun changeBackstack(newBackstack: Backstack) {
+        supportFragmentManager.saveBackStack(backstack.stack)
+        backstack = newBackstack
+        supportFragmentManager.executePendingTransactions()
+        createBackstackRootIfRequired()
+        supportFragmentManager.restoreBackStack(backstack.stack)
+    }
 
-        if (topFragment is SectionsFragment && topFragment.goBack()) {
-            // empty
-        } else {
-            super.onBackPressed()
+    private fun createBackstackRootIfRequired() {
+        val root = createRootForCurrentStack(backstack)
+        supportFragmentManager.commit {
+            add(R.id.fragment_container, root)
+            setReorderingAllowed(true)
         }
+        supportFragmentManager.executePendingTransactions()
+    }
+
+    private fun createRootForCurrentStack(currentStack: Backstack): Fragment {
+        return when (currentStack) {
+            Backstack.HOME -> FrontFragment()
+            Backstack.DISCOVER -> ListFragment()
+        }
+    }
+
+    override fun openArticle() {
+        addFragmentToBackStack(ArticleFragment())
+    }
+
+    override fun openList() {
+        addFragmentToBackStack(ListFragment())
+    }
+
+    override fun openFront() {
+        addFragmentToBackStack(FrontFragment())
+    }
+
+    private fun addFragmentToBackStack(fragment: Fragment) {
+        supportFragmentManager.commit {
+            replace(R.id.fragment_container, fragment, backstack.name)
+            setReorderingAllowed(true)
+            addToBackStack(backstack.name)
+        }
+        supportFragmentManager.executePendingTransactions()
+    }
+
+    enum class Backstack(val stack: String) {
+        HOME("home"), DISCOVER("discover");
     }
 }
