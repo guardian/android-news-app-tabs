@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class DiscoverViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+        value = "This is Discover Fragment"
     }
     val text: LiveData<String> = _text
 }
