@@ -8,6 +8,7 @@ import com.theguardian.navigation.ui.content.ArticleFragment
 import com.theguardian.navigation.ui.content.FrontFragment
 import com.theguardian.navigation.ui.content.ListFragment
 import com.theguardian.navigation.ui.content.ScreenLauncher
+import com.theguardian.navigation.ui.discover.DiscoverFragment
 
 
 class MainActivity : AppCompatActivity(), ScreenLauncher,
@@ -17,7 +18,6 @@ class MainActivity : AppCompatActivity(), ScreenLauncher,
         BackstackManager(
             supportFragmentManager,
             R.id.fragment_container,
-            BackstackManager.BackstackRootFactoryImpl()
         )
     }
 
@@ -46,11 +46,15 @@ class MainActivity : AppCompatActivity(), ScreenLauncher,
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.navigation_home -> {
-                backstackManager.changeBackstack(BackstackManager.Backstack.Home)
+                backstackManager.changeBackstack(BackstackManager.Backstack.Home) {
+                    FrontFragment()
+                }
                 true
             }
             R.id.navigation_discover -> {
-                backstackManager.changeBackstack(BackstackManager.Backstack.Discover)
+                backstackManager.changeBackstack(BackstackManager.Backstack.Discover) {
+                    DiscoverFragment()
+                }
                 true
             }
             else -> false

@@ -5,31 +5,32 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
-import com.theguardian.navigation.ui.content.FrontFragment
-import com.theguardian.navigation.ui.discover.DiscoverFragment
 
 class BackstackManager(
     private val fragmentManager: FragmentManager,
     @IdRes private val containerId: Int,
-    private val backstackRootFactory: BackstackRootFactory,
 ) {
 
     private var backstack: Backstack? = null
 
     private val initialisedStacks: MutableSet<Backstack> = hashSetOf()
 
-    fun changeBackstack(newBackstack: Backstack) {
+    fun changeBackstack(newBackstack: Backstack, backstackRootFactory: BackstackRootFactory) {
         val oldBackstack = backstack
         backstack = newBackstack
-        onBackstackChanged(oldBackstack, newBackstack)
+        onBackstackChanged(oldBackstack, newBackstack, backstackRootFactory)
     }
 
-    private fun onBackstackChanged(oldBackstack: Backstack?, newBackstack: Backstack) {
+    private fun onBackstackChanged(
+        oldBackstack: Backstack?,
+        newBackstack: Backstack,
+        backstackRootFactory: BackstackRootFactory
+    ) {
         if (oldBackstack != null) {
             fragmentManager.saveBackStack(oldBackstack.stack) // Save & pop the current backstack
             fragmentManager.executePendingTransactions()
         }
-        setUpBackstack(newBackstack)
+        setUpBackstack(newBackstack, backstackRootFactory)
     }
 
     /**
@@ -37,12 +38,15 @@ class BackstackManager(
      *
      * If it has already been setup we need to create a root fragment.
      */
-    private fun setUpBackstack(backstackToSetUp: Backstack) {
+    private fun setUpBackstack(
+        backstackToSetUp: Backstack,
+        backstackRootFactory: BackstackRootFactory
+    ) {
         if (backstackToSetUp in initialisedStacks) {
             fragmentManager.restoreBackStack(backstackToSetUp.stack) // Restore the new backstack
             fragmentManager.executePendingTransactions()
         } else {
-            val root = backstackRootFactory.createRoot(backstackToSetUp)
+            val root = backstackRootFactory()
             fragmentManager.commit {
                 setReorderingAllowed(true)
                 add(containerId, root, backstackToSetUp.stack)
@@ -67,20 +71,6 @@ class BackstackManager(
         object Sections : Backstack("live")
     }
 
-    interface BackstackRootFactory {
-        fun createRoot(backstack: Backstack): Fragment
-    }
-
-    class BackstackRootFactoryImpl : BackstackRootFactory {
-        override fun createRoot(backstack: Backstack): Fragment {
-            return when (backstack) {
-                is Backstack.Home -> FrontFragment()
-                is Backstack.Discover -> DiscoverFragment()
-                else -> TODO("${backstack.stack} is not implemented yet.")
-            }
-        }
-    }
-
     private fun FragmentManager.printBackstack() {
         val backstackEntryCount = fragmentManager.backStackEntryCount
         for (entryIndex in backstackEntryCount - 1 downTo 0) {
@@ -90,8 +80,7 @@ class BackstackManager(
         }
     }
 
-    fun interface RootFragment {
-        operator fun invoke(): Fragment?
+    fun interface BackstackRootFactory {
+        operator fun invoke(): Fragment
     }
-
 }
